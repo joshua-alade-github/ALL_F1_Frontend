@@ -27,18 +27,26 @@
         </thead>
         <tbody>
           <tr v-for="result in results" :key="result.position">
-            <th scope="row">{{result.position}}</th>
-            <td scope="row">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
-            <td v-if="result.grid > result.position" scope="row"><i class="bi bi-caret-up-fill" style="font-size: 1.2rem; color: lightgreen;"></i> {{result.grid}}</td>
-            <td v-else-if="result.grid < result.position" scope="row"><i class="bi bi-caret-down-fill" style="font-size: 1.2rem; color: red;"></i> {{result.grid}}</td>
-            <td v-else scope="row"><i class="bi bi-caret-left-fill" style="font-size: 1.2rem;"></i> {{result.grid}}</td>
-            <td scope="row">{{result.points}}</td>
-            <td scope="row">{{result.status}}</td>
-            <td scope="row">{{result.laps}}</td>
-            <td v-if="result.Time" scope="row">{{result.Time.time}}</td>
-            <td v-else scope="row"></td>
-            <td scope="row">{{result.Driver.code}}</td>
-            <td scope="row">{{result.Constructor.name}}</td>
+            <th v-if="result.position" scope="row">{{result.position}}</th>
+            <td v-else></td>
+            <td v-if="result.givenName">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
+            <td v-else></td>
+            <td v-if="result.grid > result.position"><i class="bi bi-caret-up-fill" style="font-size: 1.2rem; color: lightgreen;"></i> {{result.grid}}</td>
+            <td v-else-if="result.grid < result.position"><i class="bi bi-caret-down-fill" style="font-size: 1.2rem; color: red;"></i> {{result.grid}}</td>
+            <td v-else-if="result.grid"><i class="bi bi-caret-left-fill" style="font-size: 1.2rem;"></i> {{result.grid}}</td>
+            <td v-else></td>
+            <td v-if="result.points">{{result.points}}</td>
+            <td v-else></td>
+            <td v-if="result.status">{{result.status}}</td>
+            <td v-else></td>
+            <td v-if="result.laps">{{result.laps}}</td>
+            <td v-else></td>
+            <td v-if="result.Time">{{result.Time.time}}</td>
+            <td v-else></td>
+            <td v-if="result.Driver.code">{{result.Driver.code}}</td>
+            <td v-else></td>
+            <td v-if="result.Constructor.name">{{result.Constructor.name}}</td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

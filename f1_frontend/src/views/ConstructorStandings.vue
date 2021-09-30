@@ -15,12 +15,18 @@
         </thead>
         <tbody>
           <tr v-for="constructor in constructorStandings" :key="constructor.position">
-            <th scope="row">{{constructor.position}}</th>
-            <td scope="row">{{constructor.Constructor.name}}</td>
-            <td scope="row">{{constructor.points}}</td>
-            <td scope="row">{{constructor.wins}}</td>
-            <td scope="row">{{constructor.Constructor.nationality}}</td>
-            <td><a :href="constructor.Constructor.url" target="_blank">{{constructor.Constructor.url}}</a></td>
+            <th v-if="constructor.position" scope="row">{{constructor.position}}</th>
+            <td v-else></td>
+            <td v-if="constructor.name">{{constructor.Constructor.name}}</td>
+            <td v-else></td>
+            <td v-if="constructor.points">{{constructor.points}}</td>
+            <td v-else></td>
+            <td v-if="constructor.wins">{{constructor.wins}}</td>
+            <td v-else></td>
+            <td v-if="constructor.nationality">{{constructor.Constructor.nationality}}</td>
+            <td v-else></td>
+            <td v-if="constructor.url"><a :href="constructor.Constructor.url" target="_blank">{{constructor.Constructor.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

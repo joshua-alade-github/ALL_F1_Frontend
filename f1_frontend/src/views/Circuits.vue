@@ -12,9 +12,12 @@
         </thead>
         <tbody>
           <tr v-for="circuit in circuits" :key="circuit.circuitId">
-            <th scope="row">{{circuit.circuitName}}</th>
-            <td>{{circuit.Location.locality}}, {{circuit.Location.country}}</td>
-            <td><a :href="circuit.url" target="_blank">{{circuit.url}}</a></td>
+            <th v-if="circuit.circuitName" scope="row">{{circuit.circuitName}}</th>
+            <th v-else scope="row"></th>
+            <td v-if="circuit.Location">{{circuit.Location.locality}}, {{circuit.Location.country}}</td>
+            <td v-else></td>
+            <td v-if="circuit.url"><a :href="circuit.url" target="_blank">{{circuit.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

@@ -19,16 +19,26 @@
         </thead>
         <tbody>
           <tr v-for="driver in driverStandings" :key="driver.position">
-            <th scope="row">{{driver.position}}</th>
-            <td scope="row">{{driver.Driver.givenName}}, {{driver.Driver.familyName}}</td>
-            <td scope="row">{{driver.points}}</td>
-            <td scope="row">{{driver.wins}}</td>
-            <td>{{driver.Driver.permanentNumber}}</td>
-            <td>{{driver.Driver.code}}</td>
-            <td>{{driver.Driver.nationality}}</td>
-            <td>{{driver.Driver.dateOfBirth}}</td>
-            <td>{{driver.Constructors[0].name}}</td>
-            <td><a :href="driver.Driver.url" target="_blank">{{driver.Driver.url}}</a></td>
+            <th v-if="drivers.position" scope="row">{{driver.position}}</th>
+            <td v-else></td>
+            <td v-if="drivers.Driver.givenName">{{driver.Driver.givenName}}, {{driver.Driver.familyName}}</td>
+            <td v-else></td>
+            <td v-if="drivers.points">{{driver.points}}</td>
+            <td v-else></td>
+            <td v-if="drivers.wins">{{driver.wins}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Driver.permanentNumber">{{driver.Driver.permanentNumber}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Driver.code">{{driver.Driver.code}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Driver.nationality">{{driver.Driver.nationality}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Driver.dateOfBirth">{{driver.Driver.dateOfBirth}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Constructors[0].name">{{driver.Constructors[0].name}}</td>
+            <td v-else></td>
+            <td v-if="drivers.Driver.url"><a :href="driver.Driver.url" target="_blank">{{driver.Driver.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

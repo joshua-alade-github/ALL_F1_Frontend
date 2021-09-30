@@ -14,11 +14,16 @@
         </thead>
         <tbody>
           <tr v-for="race in schedule" :key="race.round">
-            <th scope="row">{{race.round}}</th>
-            <td>{{race.Circuit.circuitName}}</td>
-            <td>{{race.raceName}}</td>
-            <td>{{race.date}}</td>
-            <td><a :href="race.url" target="_blank">{{race.url}}</a></td>
+            <th v-if="race.round" scope="row">{{race.round}}</th>
+            <td v-else></td>
+            <td v-if="race.Circuit.circuitName">{{race.Circuit.circuitName}}</td>
+            <td v-else></td>
+            <td v-if="race.raceName">{{race.raceName}}</td>
+            <td v-else></td>
+            <td v-if="race.date">{{race.date}}</td>
+            <td v-else></td>
+            <td v-if="race.url"><a :href="race.url" target="_blank">{{race.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

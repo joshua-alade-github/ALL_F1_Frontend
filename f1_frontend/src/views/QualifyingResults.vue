@@ -26,19 +26,19 @@
         <tbody>
           <tr v-for="result in results" :key="result.position">
             <th v-if="result.position" scope="row">{{result.position}}</th>
-            <td v-else scope="row"></td>
-            <td v-if="result.Driver" scope="row">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
-            <td v-else scope="row"></td>
-            <td v-if="result.Q1" scope="row">{{result.Q1}}</td>
-            <td v-else scope="row"></td>
-            <td v-if="result.Q2" scope="row">{{result.Q2}}</td>
-            <td v-else scope="row"></td>
-            <td v-if="result.Q3" scope="row">{{result.Q3}}</td>
-            <td v-else scope="row"></td>
-            <td v-if="result.Driver" scope="row">{{result.Driver.code}}</td>
-            <td v-else scope="row"></td>
-            <td v-if="result.Constructor" scope="row">{{result.Constructor.name}}</td>
-            <td v-else scope="row"></td>
+            <td v-else></td>
+            <td v-if="result.Driver">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
+            <td v-else></td>
+            <td v-if="result.Q1">{{result.Q1}}</td>
+            <td v-else></td>
+            <td v-if="result.Q2">{{result.Q2}}</td>
+            <td v-else></td>
+            <td v-if="result.Q3">{{result.Q3}}</td>
+            <td v-else></td>
+            <td v-if="result.Driver">{{result.Driver.code}}</td>
+            <td v-else></td>
+            <td v-if="result.Constructor">{{result.Constructor.name}}</td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

@@ -12,9 +12,12 @@
         </thead>
         <tbody>
           <tr v-for="constructor in constructors" :key="constructor.constructorId">
-            <th scope="row">{{constructor.name}}</th>
-            <td>{{constructor.nationality}}</td>
-            <td><a :href="constructor.url" target="_blank">{{constructor.url}}</a></td>
+            <th v-if="constructor.name" scope="row">{{constructor.name}}</th>
+            <td v-else></td>
+            <td v-if="constructor.nationality">{{constructor.nationality}}</td>
+            <td v-else></td>
+            <td v-if="constructor.url"><a :href="constructor.url" target="_blank">{{constructor.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

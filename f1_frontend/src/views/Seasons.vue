@@ -10,8 +10,10 @@
         </thead>
         <tbody>
           <tr v-for="season in seasons.reverse()" :key="season.season">
-            <th scope="row"><router-link :to="{path: '/results/' + season.season}">{{season.season}}</router-link></th>
-            <td><a :href="season.url" target="_blank">{{season.url}}</a></td>
+            <th v-if="season.season" scope="row"><router-link :to="{path: '/results/' + season.season}">{{season.season}}</router-link></th>
+            <td v-else></td>
+            <td v-if="season.url"><a :href="season.url" target="_blank">{{season.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>

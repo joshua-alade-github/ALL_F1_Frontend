@@ -15,12 +15,18 @@
         </thead>
         <tbody>
           <tr v-for="driver in drivers" :key="driver.driverId">
-            <th scope="row">{{driver.givenName}}, {{driver.familyName}}</th>
-            <td>{{driver.permanentNumber}}</td>
-            <td>{{driver.code}}</td>
-            <td>{{driver.nationality}}</td>
-            <td>{{driver.dateOfBirth}}</td>
-            <td><a :href="driver.url" target="_blank">{{driver.url}}</a></td>
+            <th v-if="drivers.givenName" scope="row">{{driver.givenName}}, {{driver.familyName}}</th>
+            <td v-else></td>
+            <td v-if="drivers.permanentNumber">{{driver.permanentNumber}}</td>
+            <td v-else></td>
+            <td v-if="drivers.code">{{driver.code}}</td>
+            <td v-else></td>
+            <td v-if="drivers.nationality">{{driver.nationality}}</td>
+            <td v-else></td>
+            <td v-if="drivers.dateOfBirth">{{driver.dateOfBirth}}</td>
+            <td v-else></td>
+            <td v-if="drivers.url"><a :href="driver.url" target="_blank">{{driver.url}}</a></td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>
