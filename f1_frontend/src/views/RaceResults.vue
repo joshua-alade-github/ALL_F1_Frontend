@@ -79,6 +79,7 @@ export default {
   },
   methods: {
     async getF1ResultsRound(){
+      if (this.$route.name !== "RaceResults") return
       this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       const roundSlug = this.$route.params.round_slug
@@ -93,7 +94,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
       this.$store.commit('setIsLoading', false)
     },

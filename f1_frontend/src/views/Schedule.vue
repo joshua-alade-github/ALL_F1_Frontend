@@ -53,6 +53,7 @@ export default {
   },
   methods: {
     async getF1Schedule(){
+      if (this.$route.name !== "Schedule") return
       this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       await axios.get(`/api/schedule/${yearSlug}/`)
@@ -61,7 +62,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
       this.$store.commit('setIsLoading', false)
     }

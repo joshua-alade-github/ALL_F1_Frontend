@@ -72,6 +72,7 @@ export default {
   methods: {
     async getF1QualifyingResults(){
       this.$store.commit('setIsLoading', true)
+      if (this.$route.name !== "QualifyingResults") return
       const yearSlug = this.$route.params.year_slug
       const roundSlug = this.$route.params.round_slug
       await axios.get(`/api/qualifying/${yearSlug}/${roundSlug}/`)
@@ -85,7 +86,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
         this.$store.commit('setIsLoading', false)
     },

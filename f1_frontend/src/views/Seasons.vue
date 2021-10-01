@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     async getF1Seasons(){
+      if (this.$route.name !== "Seasons") return
       this.$store.commit('setIsLoading', true)
       await axios.get('/api/seasons/')
         .then(response => {
@@ -48,7 +49,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
       this.$store.commit('setIsLoading', false)
     }

@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     async getF1Circuits(){
+      if (this.$route.name !== "Circuits") return
       this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       await axios.get(`/api/circuits/${yearSlug}/`)
@@ -55,7 +56,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
       this.$store.commit('setIsLoading', false)
     }

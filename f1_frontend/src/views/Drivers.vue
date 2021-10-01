@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     async getDrivers(){
+      if (this.$route.name !== "Drivers") return
       this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       await axios.get(`/api/drivers/${yearSlug}/`)
@@ -64,7 +65,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
-          //this.$router.push("/error")
+          this.$router.push("/error")
         })
       this.$store.commit('setIsLoading', false)
     }
