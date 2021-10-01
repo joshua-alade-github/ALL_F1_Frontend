@@ -1,10 +1,10 @@
 <template>
   <div>
     <NavBar v-if="this.$route.path !== '/'" />
-    <router-view/>
     <div class="is-loading-bar d-flex justify-content-center" v-bind:class="{'is-loading': $store.state.isLoading }">
       <div class="lds-dual-ring"></div>
     </div>
+    <router-view/>
   </div>
 </template>
 
@@ -36,6 +36,9 @@ export default {
 
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+  body { 
+    padding-top: 70px;
   }
   .table-div {
     padding: 5%;
