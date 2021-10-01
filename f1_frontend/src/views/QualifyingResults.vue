@@ -86,6 +86,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
+          this.$store.commit('setIsLoading', false)
           this.$router.push("/error")
         })
         this.$store.commit('setIsLoading', false)
