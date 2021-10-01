@@ -7,7 +7,9 @@
 
 <script>
 export default {
-
+  mounted() {
+    this.$store.commit('setIsLoading', false)
+  },
 }
 </script>
 
