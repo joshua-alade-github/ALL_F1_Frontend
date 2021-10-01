@@ -17,15 +17,15 @@
           <tr v-for="constructor in constructorStandings" :key="constructor.position">
             <th v-if="constructor.position" scope="row">{{constructor.position}}</th>
             <td v-else></td>
-            <td v-if="constructor.name">{{constructor.Constructor.name}}</td>
+            <td v-if="constructor.Constructor.name">{{constructor.Constructor.name}}</td>
             <td v-else></td>
             <td v-if="constructor.points">{{constructor.points}}</td>
             <td v-else></td>
             <td v-if="constructor.wins">{{constructor.wins}}</td>
             <td v-else></td>
-            <td v-if="constructor.nationality">{{constructor.Constructor.nationality}}</td>
+            <td v-if="constructor.Constructor.nationality">{{constructor.Constructor.nationality}}</td>
             <td v-else></td>
-            <td v-if="constructor.url"><a :href="constructor.Constructor.url" target="_blank">{{constructor.Constructor.url}}</a></td>
+            <td v-if="constructor.Constructor.url"><a :href="constructor.Constructor.url" target="_blank">{{constructor.Constructor.url}}</a></td>
             <td v-else></td>
           </tr>
         </tbody>
@@ -63,6 +63,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
+          //this.$router.push("/error")
         })
     }
   },

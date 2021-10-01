@@ -29,7 +29,7 @@
           <tr v-for="result in results" :key="result.position">
             <th v-if="result.position" scope="row">{{result.position}}</th>
             <td v-else></td>
-            <td v-if="result.givenName">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
+            <td v-if="result.Driver.givenName">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
             <td v-else></td>
             <td v-if="result.grid > result.position"><i class="bi bi-caret-up-fill" style="font-size: 1.2rem; color: lightgreen;"></i> {{result.grid}}</td>
             <td v-else-if="result.grid < result.position"><i class="bi bi-caret-down-fill" style="font-size: 1.2rem; color: red;"></i> {{result.grid}}</td>
@@ -93,6 +93,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
+          //this.$router.push("/error")
         })
     },
   },

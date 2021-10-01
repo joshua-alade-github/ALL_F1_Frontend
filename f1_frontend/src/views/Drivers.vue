@@ -15,17 +15,17 @@
         </thead>
         <tbody>
           <tr v-for="driver in drivers" :key="driver.driverId">
-            <th v-if="drivers.givenName" scope="row">{{driver.givenName}}, {{driver.familyName}}</th>
+            <th v-if="driver.givenName" scope="row">{{driver.givenName}}, {{driver.familyName}}</th>
             <td v-else></td>
-            <td v-if="drivers.permanentNumber">{{driver.permanentNumber}}</td>
+            <td v-if="driver.permanentNumber">{{driver.permanentNumber}}</td>
             <td v-else></td>
-            <td v-if="drivers.code">{{driver.code}}</td>
+            <td v-if="driver.code">{{driver.code}}</td>
             <td v-else></td>
-            <td v-if="drivers.nationality">{{driver.nationality}}</td>
+            <td v-if="driver.nationality">{{driver.nationality}}</td>
             <td v-else></td>
-            <td v-if="drivers.dateOfBirth">{{driver.dateOfBirth}}</td>
+            <td v-if="driver.dateOfBirth">{{driver.dateOfBirth}}</td>
             <td v-else></td>
-            <td v-if="drivers.url"><a :href="driver.url" target="_blank">{{driver.url}}</a></td>
+            <td v-if="driver.url"><a :href="driver.url" target="_blank">{{driver.url}}</a></td>
             <td v-else></td>
           </tr>
         </tbody>
@@ -63,6 +63,7 @@ export default {
         })
         .catch( err => {
           console.log(err);
+          //this.$router.push("/error")
         })
     }
   },

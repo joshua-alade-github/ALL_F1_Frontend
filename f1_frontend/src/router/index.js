@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import Error from '../views/Error.vue'
 import DriverStandings from '../views/DriverStandings.vue'
 import ConstructorStandings from '../views/ConstructorStandings.vue'
 import Drivers from '../views/Drivers.vue'
@@ -67,6 +68,12 @@ const routes = [
     path: '/schedule/:year_slug',
     name: 'Schedule',
     component: Schedule
+  },
+  //This route should be last as it's for catch all error handling
+  {
+    path: "/:pathMatch(.*)*",
+    name: 'Error',
+    component: Error
   },
 ]
 
