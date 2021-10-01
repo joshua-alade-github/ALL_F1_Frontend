@@ -6,6 +6,11 @@
 
 export default {
   name: "Dropdown",
+  data() {
+    return {
+      year: ''
+    }
+  },
   mounted() {
     this.getYears()
   },

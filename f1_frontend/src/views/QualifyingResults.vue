@@ -59,7 +59,6 @@ export default {
       season: "",
       date: "",
       wiki: "",
-      year: '2021',
     }
   },
   watch: {
@@ -72,6 +71,7 @@ export default {
   },
   methods: {
     async getF1QualifyingResults(){
+      this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       const roundSlug = this.$route.params.round_slug
       await axios.get(`/api/qualifying/${yearSlug}/${roundSlug}/`)
@@ -87,6 +87,7 @@ export default {
           console.log(err);
           //this.$router.push("/error")
         })
+        this.$store.commit('setIsLoading', false)
     },
   },
 }

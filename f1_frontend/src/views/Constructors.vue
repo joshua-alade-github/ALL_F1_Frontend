@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     async getF1Constructors(){
+      this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       await axios.get(`/api/constructors/${yearSlug}/`)
         .then(response => {
@@ -56,6 +57,7 @@ export default {
           console.log(err);
           //this.$router.push("/error")
         })
+      this.$store.commit('setIsLoading', false)
     }
   },
 }

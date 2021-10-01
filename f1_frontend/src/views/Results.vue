@@ -17,7 +17,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="result in results.reverse()" :key="result.round">
+          <tr v-for="result in reversedResults" :key="result.round">
             <th v-if="result.season" scope="row"><router-link class="text-decoration-none" :to="{path: '/results/' + result.season + '/' + result.round}">{{result.round}}</router-link>, {{result.season}}</th>
             <td v-else></td>
             <td v-if="result.raceName">{{result.raceName}}</td>
@@ -55,6 +55,11 @@ export default {
       results: []
     }
   },
+  computed: {
+    reversedResults() {
+        return this.results.slice().reverse();
+    }     
+  },
   watch: {
     $route() {
       this.getF1Results()
@@ -65,6 +70,7 @@ export default {
   },
   methods: {
     async getF1Results(){
+      this.$store.commit('setIsLoading', true)
       const yearSlug = this.$route.params.year_slug
       await axios.get(`/api/results/${yearSlug}/`)
         .then(response => {
@@ -74,6 +80,7 @@ export default {
           console.log(err);
           //this.$router.push("/error")
         })
+      this.$store.commit('setIsLoading', false)
     }
   },
 }
