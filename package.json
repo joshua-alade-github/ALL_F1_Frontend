@@ -16,12 +16,10 @@
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^3.6.5",
     "express": "^4.17.1",
-    "sass": "^1.63.6",
     "serve-static": "^1.14.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "webpack": "^5.88.1"
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -33,7 +31,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
-    "sass": "^1.63.6",
+    "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2"
   },
   "eslintConfig": {
@@ -49,9 +47,6 @@
       "parser": "babel-eslint"
     },
     "rules": {}
-  },
-  "engines": {
-    "node": "16.x"
   },
   "browserslist": [
     "> 1%",
