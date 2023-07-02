@@ -1,10 +1,13 @@
 {
   "name": "f1_frontend",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.20.1"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build && vue-cli-service serve",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "postinstall": "npm run build",
     "start": "node server.js"
