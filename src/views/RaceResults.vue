@@ -31,9 +31,9 @@
             <td v-else></td>
             <td v-if="result.Driver.givenName">{{result.Driver.givenName}}, {{result.Driver.familyName}}</td>
             <td v-else></td>
-            <td v-if="result.grid > result.position"><i class="bi bi-caret-up-fill" style="font-size: 1.2rem; color: lightgreen;"></i> {{result.grid}}</td>
-            <td v-else-if="result.grid < result.position"><i class="bi bi-caret-down-fill" style="font-size: 1.2rem; color: red;"></i> {{result.grid}}</td>
-            <td v-else-if="result.grid"><i class="bi bi-caret-left-fill" style="font-size: 1.2rem;"></i> {{result.grid}}</td>
+            <td v-if="Number(result.grid) > Number(result.position)"><i class="bi bi-caret-up-fill" style="font-size: 1.2rem; color: lightgreen;"></i> {{result.grid}}</td>
+            <td v-else-if="Number(result.grid) < Number(result.position)"><i class="bi bi-caret-down-fill" style="font-size: 1.2rem; color: red;"></i> {{result.grid}}</td>
+            <td v-else-if="Number(result.grid) == Number(result.position)"><i class="bi bi-caret-left-fill" style="font-size: 1.2rem;"></i> {{result.grid}}</td>
             <td v-else></td>
             <td v-if="result.points">{{result.points}}</td>
             <td v-else></td>

@@ -6,7 +6,7 @@
     <div class="container section-container">
         <div class="row">
           <div class="col-sm">
-            <router-link to="/driver-standings/2021" class="text-decoration-none">
+            <router-link :to="`/driver-standings/${currentYear}`" class="text-decoration-none">
               <div class="card text-black">
                 <div class="card-body">
                   <h4>Driver Standings</h4>
@@ -15,7 +15,7 @@
             </router-link>
           </div>
           <div class="col-sm">
-            <router-link to="/constructor-standings/2021" class="text-decoration-none">
+            <router-link :to="`/constructor-standings/${currentYear}`" class="text-decoration-none">
               <div class="card bg-dark text-white">
                 <div class="card-body">
                   <h4>Constructor Standings</h4>
@@ -24,7 +24,7 @@
             </router-link>
           </div>
           <div class="col-sm">
-            <router-link to="/results/2021" class="text-decoration-none">
+            <router-link :to="`/results/${currentYear}`" class="text-decoration-none">
               <div class="card text-black">
                 <div class="card-body">
                   <h4>Results</h4>
@@ -33,7 +33,7 @@
             </router-link>
           </div>
           <div class="col-sm">
-            <router-link to="/schedule/2021" class="text-decoration-none">
+            <router-link :to="`/schedule/${currentYear}`" class="text-decoration-none">
               <div class="card bg-dark text-white">
                 <div class="card-body">
                   <h4>Schedule</h4>
@@ -44,7 +44,7 @@
         </div>
         <div class="row">
           <div class="col-sm">
-            <router-link to="/circuits/2021" class="text-decoration-none">
+            <router-link :to="`/circuits/${currentYear}`" class="text-decoration-none">
               <div class="card bg-dark text-white">
                 <div class="card-body">
                   <h4>Circuits</h4>
@@ -62,7 +62,7 @@
             </router-link>
           </div>
           <div class="col-sm">
-            <router-link to="/drivers/2021" class="text-decoration-none">
+            <router-link :to="`/drivers/${currentYear}`" class="text-decoration-none">
               <div class="card bg-dark text-white">
                 <div class="card-body">
                   <h4>Drivers</h4>
@@ -71,7 +71,7 @@
             </router-link>
           </div>
           <div class="col-sm">
-            <router-link to="/constructors/2021" class="text-decoration-none">
+            <router-link :to="`/constructors/${currentYear}`" class="text-decoration-none">
               <div class="card text-black">
                 <div class="card-body">
                   <h4>Constructors</h4>
@@ -88,6 +88,11 @@
 
 export default {
   name: 'Home',
+  data() {
+    return {
+      currentYear: new Date().getFullYear()
+    }
+  },
 }
 </script>
 

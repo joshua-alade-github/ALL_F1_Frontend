@@ -9,28 +9,28 @@
       <div class="collapse navbar-collapse pl-5" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <router-link to="/driver-standings/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Driver Standings</router-link>
+            <router-link :to="`/driver-standings/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Driver Standings</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/constructor-standings/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Constructor Standings</router-link>
+            <router-link :to="`/constructor-standings/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Constructor Standings</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/results/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Results</router-link>
+            <router-link :to="`/results/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Results</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/schedule/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Schedule</router-link>
+            <router-link :to="`/schedule/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Schedule</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/circuits/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Circuits</router-link>
+            <router-link :to="`/circuits/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Circuits</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/seasons" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Seasons</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/drivers/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Drivers</router-link>
+            <router-link :to="`/drivers/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Drivers</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/constructors/2021" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Constructors</router-link>
+            <router-link :to="`/constructors/${currentYear}`" class="nav-link pointer" data-toggle="collapse" data-target=".navbar-collapse.show">Constructors</router-link>
           </li>
         </ul>
       </div>
@@ -42,6 +42,11 @@
 
 export default {
   name: "NavBar",
+  data() {
+    return {
+      currentYear: new Date().getFullYear()
+    }
+  },
 };
 </script>
 
