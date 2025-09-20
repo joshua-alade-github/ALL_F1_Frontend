@@ -1,9 +1,18 @@
 <template>
   <div>
     <NavBar v-if="this.$route.path !== '/'" />
-    <div class="is-loading-bar d-flex justify-content-center" v-bind:class="{'is-loading': $store.state.isLoading }">
-      <div class="lds-dual-ring"></div>
+    
+    <div v-if="$store.state.errorVisible" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+      <strong>Error!</strong> {{ $store.state.errorMessage }}
+      <button type="button" class="btn-close" @click="$store.commit('clearError')"></button>
     </div>
+    
+    <div class="loading-container" v-if="$store.getters.isLoading">
+      <div class="loading-bar">
+        <div class="loading-bar-progress"></div>
+      </div>
+    </div>
+    
     <router-view/>
   </div>
 </template>
@@ -21,6 +30,7 @@ export default {
 <style lang="scss">
   @import '../node_modules/bootstrap';
   @import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
+  
   ::-webkit-scrollbar {
     width: 12px;
   }
@@ -37,49 +47,99 @@ export default {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+  
   body { 
     padding-top: 70px;
   }
+  
   .table-div {
-    padding: 5%;
+    padding: 2% 5%;
+    
+    @media (max-width: 768px) {
+      padding: 2%;
+    }
   }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    @media (max-width: 768px) {
+      margin: 0 -1rem;
+      padding: 0 1rem;
+    }
+  }
+  
   .table {
     border: 3px solid grey;
+    min-width: 600px;
   }
-  .lds-dual-ring {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
+  
+  .loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.9);
   }
-  .lds-dual-ring:after {
-    content: " ";
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border-radius: 50%;
-    border: 6px solid #ccc;
-    border-color: #ccc transparent #ccc transparent;
-    animation: lds-dual-ring 1.2s linear infinite;
+  
+  .loading-bar {
+    height: 4px;
+    background: #f0f0f0;
+    overflow: hidden;
   }
-  @keyframes lds-dual-ring {
+  
+  .loading-bar-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #e10600, #ff1e00);
+    animation: loading 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes loading {
     0% {
-      transform: rotate(0deg);
+      transform: translateX(-100%);
     }
     100% {
-      transform: rotate(360deg);
+      transform: translateX(200%);
     }
   }
-
-  .is-loading-bar {
-    height: 0;
-    overflow: hidden;
-
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-
-    &.is-loading {
-      height: 80px;
+  
+  .alert {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9998;
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+  
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
     }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  .skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+    @extend .skeleton;
+  }
+  
+  .skeleton-row {
+    height: 3rem;
+    margin-bottom: 0.5rem;
+    @extend .skeleton;
   }
 </style>
