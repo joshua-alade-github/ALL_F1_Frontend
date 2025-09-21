@@ -79,6 +79,12 @@ export default {
       nextRaceIndex: -1,
     }
   },
+  computed: {
+    isCurrentYear() {
+      const currentYear = new Date().getFullYear().toString();
+      return this.$route.params.year_slug === currentYear;
+    }
+  },
   watch: {
     '$route.params.year_slug': {
       handler: 'getF1Schedule',
@@ -112,9 +118,15 @@ export default {
     },
     
     findNextRace() {
+      if (!this.isCurrentYear) {
+        this.nextRaceIndex = -1;
+        return;
+      }
+      
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
+      this.nextRaceIndex = -1;
       for (let i = 0; i < this.schedule.length; i++) {
         const raceDate = new Date(this.schedule[i].date);
         if (raceDate >= today) {
@@ -125,6 +137,8 @@ export default {
     },
     
     isNextRace(race) {
+      if (!this.isCurrentYear) return false;
+      
       const index = this.schedule.indexOf(race);
       return index === this.nextRaceIndex;
     },
@@ -157,7 +171,6 @@ export default {
     formatTime(time) {
       if (!time) return null;
       try {
-        // Remove the 'Z' and format as local time
         const [hours, minutes] = time.replace('Z', '').split(':');
         const date = new Date();
         date.setHours(parseInt(hours), parseInt(minutes));

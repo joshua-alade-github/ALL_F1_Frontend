@@ -5,7 +5,7 @@
         <div class="skeleton-row" v-for="i in 10" :key="i"></div>
       </div>
       
-      <div v-else-if="reversedSeasons && reversedSeasons.length > 0" class="table-responsive">
+      <div v-else-if="seasons && seasons.length > 0" class="table-responsive">
         <table class="table table-hover table-striped table-light">
           <thead>
             <tr>
@@ -14,7 +14,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="season in reversedSeasons" :key="season.season">
+            <tr v-for="season in seasons" :key="season.season">
               <th scope="row">
                 <router-link 
                   v-if="season.season"
@@ -84,9 +84,6 @@ export default {
     }
   },
   computed: {
-    reversedSeasons() {
-      return this.seasons.slice().reverse();
-    },
     displayPages() {
       if (!this.pagination) return [];
       

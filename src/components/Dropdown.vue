@@ -1,5 +1,7 @@
 <template>
-  <select class="form-select selectpicker" v-model="year" @change="handleChange" id='date-dropdown'></select>
+  <select class="form-select selectpicker" v-model="selectedYear" @change="handleChange" id='date-dropdown'>
+    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+  </select>
 </template>
 
 <script>
@@ -9,25 +11,32 @@ export default {
   name: "Dropdown",
   data() {
     return {
-      year: ''
+      selectedYear: '',
+      years: []
+    }
+  },
+  watch: {
+    '$route.params.year_slug': {
+      handler(newYear) {
+        if (newYear && newYear !== this.selectedYear) {
+          this.selectedYear = newYear;
+        }
+      },
+      immediate: true
     }
   },
   mounted() {
-    this.getYears();
-    this.year = this.$route.params.year_slug || new Date().getFullYear();
+    this.generateYears();
+    this.selectedYear = this.$route.params.year_slug || new Date().getFullYear().toString();
   },
   methods: {
-    getYears() {
-      let dateDropdown = document.getElementById('date-dropdown'); 
-      let currentYear = new Date().getFullYear();    
-      let earliestYear = 1950;
+    generateYears() {
+      const currentYear = new Date().getFullYear();
+      const earliestYear = 1950;
+      this.years = [];
       
-      while (currentYear >= earliestYear) {      
-        let dateOption = document.createElement('option');          
-        dateOption.text = currentYear;      
-        dateOption.value = currentYear;        
-        dateDropdown.add(dateOption);      
-        currentYear -= 1;    
+      for (let year = currentYear; year >= earliestYear; year--) {
+        this.years.push(year.toString());
       }
     },
     
@@ -36,10 +45,10 @@ export default {
     }, 300),
     
     changeRoute() {
-      if (this.year && this.year !== this.$route.params.year_slug) {
+      if (this.selectedYear && this.selectedYear !== this.$route.params.year_slug) {
         this.$router.push({ 
           name: this.$route.name, 
-          params: { year_slug: this.year }
+          params: { year_slug: this.selectedYear }
         });
       }
     },
