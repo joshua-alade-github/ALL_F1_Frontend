@@ -1,9 +1,42 @@
 <template>
   <div class="home">
+    <div class="api-status-fixed">
+      <span class="badge" :class="apiStatusClass">
+        <i class="bi bi-circle-fill me-1"></i>
+        {{ apiStatusText }}
+      </span>
+    </div>
+
+    <div v-if="showWakeupProgress" class="wakeup-modal">
+      <div class="wakeup-content">
+        <div class="spinner-border text-danger mb-3" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5>Waking up the API...</h5>
+        <p class="text-muted mb-3">This may take up to 60 seconds on first load</p>
+        <div class="progress">
+          <div 
+            class="progress-bar progress-bar-striped progress-bar-animated bg-danger" 
+            role="progressbar" 
+            :style="{ width: wakeupProgress + '%' }"
+            :aria-valuenow="wakeupProgress" 
+            aria-valuemin="0" 
+            aria-valuemax="100">
+            {{ Math.round(wakeupProgress) }}%
+          </div>
+        </div>
+        <p class="small text-muted mt-2">
+          <i class="bi bi-info-circle"></i> 
+          The API server is starting up. This only happens after periods of inactivity.
+        </p>
+      </div>
+    </div>
+
     <div class="heading-container">
       <h1 class="display-3">ALL F1</h1>
       <p class="lead">Your Complete Formula 1 Statistics Hub</p>
     </div>
+    
     <div class="container section-container">
       <div class="row g-3">
         <div class="col-sm-6 col-md-3">
@@ -95,15 +128,6 @@
           </router-link>
         </div>
       </div>
-      
-      <div class="mt-5 text-center">
-        <div class="api-status">
-          <span class="badge" :class="apiStatusClass">
-            <i class="bi bi-circle-fill me-1"></i>
-            {{ apiStatusText }}
-          </span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -116,7 +140,12 @@ export default {
   data() {
     return {
       currentYear: new Date().getFullYear(),
-      apiStatus: 'checking', 
+      apiStatus: 'checking',
+      showWakeupProgress: false,
+      wakeupProgress: 0,
+      wakeupStartTime: null,
+      wakeupProgressInterval: null,
+      wakeupTimeout: null,
     }
   },
   computed: {
@@ -125,28 +154,116 @@ export default {
         'bg-secondary': this.apiStatus === 'checking',
         'bg-success': this.apiStatus === 'healthy',
         'bg-danger': this.apiStatus === 'unhealthy',
+        'bg-warning': this.apiStatus === 'waking',
       };
     },
     apiStatusText() {
       switch (this.apiStatus) {
-        case 'checking': return 'Checking API Status...';
+        case 'checking': return 'Checking API...';
         case 'healthy': return 'API Connected';
-        case 'unhealthy': return 'API Issues Detected';
-        default: return 'Unknown Status';
+        case 'unhealthy': return 'API Issues';
+        case 'waking': return 'Waking API...';
+        default: return 'Unknown';
       }
     }
   },
   mounted() {
     this.checkAPIHealth();
   },
+  beforeUnmount() {
+    this.clearWakeupTimers();
+  },
   methods: {
     async checkAPIHealth() {
+      this.apiStatus = 'checking';
+      this.wakeupStartTime = Date.now();
+      
       try {
-        await f1API.healthCheck();
-        this.apiStatus = 'healthy';
+        const timeoutPromise = new Promise((resolve) => {
+          this.wakeupTimeout = setTimeout(() => {
+            this.showWakeupModal();
+            resolve('timeout');
+          }, 5000);
+        });
+
+        const healthPromise = f1API.healthCheck().then(response => {
+          clearTimeout(this.wakeupTimeout);
+          return response;
+        });
+
+        const result = await Promise.race([healthPromise, timeoutPromise]);
+        
+        if (result !== 'timeout') {
+          this.apiStatus = 'healthy';
+          this.hideWakeupModal();
+        } else {
+          await healthPromise;
+          this.apiStatus = 'healthy';
+          this.hideWakeupModal();
+        }
       } catch (error) {
         console.error('API health check failed:', error);
+        
+        if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+          this.retryHealthCheck();
+        } else {
+          this.apiStatus = 'unhealthy';
+          this.hideWakeupModal();
+        }
+      }
+    },
+
+    async retryHealthCheck(attempt = 1, maxAttempts = 12) {
+      if (attempt > maxAttempts) {
         this.apiStatus = 'unhealthy';
+        this.hideWakeupModal();
+        return;
+      }
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        await f1API.healthCheck();
+        this.apiStatus = 'healthy';
+        this.hideWakeupModal();
+      } catch (error) {
+        this.retryHealthCheck(attempt + 1, maxAttempts);
+      }
+    },
+
+    showWakeupModal() {
+      this.showWakeupProgress = true;
+      this.apiStatus = 'waking';
+      this.wakeupProgress = 0;
+      
+      this.wakeupProgressInterval = setInterval(() => {
+        const elapsed = Date.now() - this.wakeupStartTime;
+        const maxTime = 60000;
+        
+        const rawProgress = (elapsed / maxTime) * 100;
+        this.wakeupProgress = Math.min(95, rawProgress * 0.9 + Math.sqrt(rawProgress) * 5);
+        
+        if (this.wakeupProgress >= 95) {
+          clearInterval(this.wakeupProgressInterval);
+        }
+      }, 500);
+    },
+
+    hideWakeupModal() {
+      this.wakeupProgress = 100;
+      setTimeout(() => {
+        this.showWakeupProgress = false;
+        this.clearWakeupTimers();
+      }, 500);
+    },
+
+    clearWakeupTimers() {
+      if (this.wakeupProgressInterval) {
+        clearInterval(this.wakeupProgressInterval);
+        this.wakeupProgressInterval = null;
+      }
+      if (this.wakeupTimeout) {
+        clearTimeout(this.wakeupTimeout);
+        this.wakeupTimeout = null;
       }
     }
   }
@@ -206,17 +323,88 @@ export default {
     }
   }
   
-  .api-status {
-    display: inline-block;
+  .api-status-fixed {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
     
     .badge {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       padding: 0.5rem 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       
       i {
         font-size: 0.6rem;
         animation: pulse 2s infinite;
       }
+    }
+    
+    @media (max-width: 768px) {
+      top: 70px;
+      right: 10px;
+      
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  }
+  
+  .wakeup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .wakeup-content {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    
+    h5 {
+      color: #212529;
+      margin-bottom: 0.5rem;
+    }
+    
+    .progress {
+      height: 25px;
+      border-radius: 10px;
+      background-color: #e9ecef;
+      
+      .progress-bar {
+        font-weight: bold;
+        line-height: 25px;
+      }
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
   
@@ -238,6 +426,14 @@ export default {
     
     .section-container {
       padding: 2rem 1rem;
+    }
+    
+    .wakeup-content {
+      padding: 1.5rem;
+      
+      h5 {
+        font-size: 1.1rem;
+      }
     }
   }
 </style>

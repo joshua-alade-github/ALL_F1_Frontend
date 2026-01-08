@@ -1,9 +1,9 @@
-import axios from 'axios';
 import store from '@/store';
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL || 'https://morning-thicket-80526.onrender.com/',
-  timeout: 10000,
+  timeout: 60000,
 });
 
 api.interceptors.request.use(
@@ -31,6 +31,10 @@ api.interceptors.response.use(
   error => {
     store.dispatch('stopLoading');
     
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
+    
     if (error.response) {
       if (error.response.status === 404) {
         store.dispatch('showError', 'Data not found');
@@ -40,7 +44,11 @@ api.interceptors.response.use(
         store.dispatch('showError', error.response.data?.message || 'An error occurred');
       }
     } else if (error.request) {
-      store.dispatch('showError', 'Network error. Please check your connection.');
+      if (error.code === 'ECONNABORTED') {
+        store.dispatch('showError', 'Request timeout. The server may be starting up.');
+      } else {
+        store.dispatch('showError', 'Network error. Please check your connection.');
+      }
     } else {
       store.dispatch('showError', error.message || 'An unexpected error occurred');
     }
@@ -52,6 +60,8 @@ api.interceptors.response.use(
 class F1API {
   constructor() {
     this.cancelTokens = new Map();
+    this.healthCheckRetries = 0;
+    this.maxHealthCheckRetries = 12;
   }
 
   cancelRequest(key) {
@@ -61,21 +71,64 @@ class F1API {
     }
   }
 
-  async makeRequest(key, url) {
+  async makeRequest(key, url, retryCount = 0) {
     this.cancelRequest(key);
     
     const source = axios.CancelToken.source();
     this.cancelTokens.set(key, source);
     
     try {
-      const response = await api.get(url, { cancelToken: source.token });
+      const response = await api.get(url, { 
+        cancelToken: source.token,
+        timeout: 30000 
+      });
       this.cancelTokens.delete(key);
       return response;
     } catch (error) {
       if (!axios.isCancel(error)) {
+        if (error.code === 'ECONNABORTED' && retryCount < 2) {
+          console.log(`Retrying request ${key} (attempt ${retryCount + 1}/2)...`);
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          return this.makeRequest(key, url, retryCount + 1);
+        }
         throw error;
       }
       return null;
+    }
+  }
+
+  async healthCheck(silent = false) {
+    try {
+      const response = await api.get('/api/health/', {
+        timeout: 60000,
+      });
+      this.healthCheckRetries = 0;
+      return response;
+    } catch (error) {
+      if (!silent) {
+        console.warn('Health check failed:', error.message);
+      }
+      
+      if (error.code === 'ECONNABORTED' && this.healthCheckRetries < this.maxHealthCheckRetries) {
+        this.healthCheckRetries++;
+        throw error;
+      }
+      
+      return {
+        status: 'unhealthy',
+        error: error.message
+      };
+    }
+  }
+
+  async pingServer() {
+    try {
+      await api.get('/api/health/', { 
+        timeout: 5000,
+        validateStatus: () => true 
+      });
+    } catch (error) {
+      console.log('Server ping sent');
     }
   }
 
@@ -122,10 +175,6 @@ class F1API {
 
   clearCache() {
     return api.post('/api/clear-cache/');
-  }
-
-  healthCheck() {
-    return api.get('/api/health/');
   }
 }
 
